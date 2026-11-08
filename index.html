@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Girlfriend Day, Amira 💕</title>
+    <meta name="description" content="Célébrons la Journée de la petite amie avec une surprise romantique et un message rien que pour Amira.">
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" href="qr-code.png" type="image/png">
+    <link rel="apple-touch-icon" href="qr-code.png">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Happy Girlfriend Day, Amira 💕">
+    <meta property="og:description"
+        content="Célébrons la Journée de la petite amie avec une surprise romantique et un message rien que pour Amira.">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Happy Girlfriend Day, Amira 💕">
+    <meta name="twitter:description"
+        content="Célébrons la Journée de la petite amie avec une surprise romantique et un message rien que pour Amira.">
+
+    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/sun0225SUN/photos/img/20210715233345.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+</head>
+
+<body>
+    <button id="langSwitchBtn"
+        style="display:none;top:20px;right:150px;z-index:10000004;padding:8px 16px;border-radius:8px;background:#fff;color:#222;border:1px solid #dadce0;cursor:pointer;">
+        FR / EN
+    </button>
+    <!-- Google Login Button -->
+    <div id="googleAuthContainer" style="
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 10003;
+        font-family: Arial, sans-serif;
+    ">
+        <button id="googleLoginBtn" style="
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: none;
+            border: 1px solid #dadce0;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #3c4043;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        ">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285f4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34a853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#fbbc05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                <path fill="#ea4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+        </button>
+
+        <div id="userInfo" style="
+            display: none;
+            align-items: center;
+            padding: 8px 12px;
+            background: none;
+            border: 1px solid #dadce0;
+            border-radius: 24px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        ">
+            <img id="userAvatar" style="
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                margin-right: 8px;
+            ">
+            <div style="margin-right: 12px;">
+                <div id="userName" style="font-weight: 500; color: #ffffff;"></div>
+                <div id="userEmail" style="font-size: 12px; color: #ffffff;"></div>
+            </div>
+            <button id="logoutBtn"
+                style="padding: 4px 8px; background: none; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px; cursor: pointer; color: #fbfbfc;"
+                data-i18n="logout">Se déconnecter</button>
+        </div>
+    </div>
+
+
+    </div>
+    <canvas id="matrix-rain" style="display: none;"></canvas>
+    <canvas style="position:absolute;width:100%;height:100%;z-index:9999;display:none;" class="canvas"></canvas>
+    <div class="overlay">
+        <div class="stars-container" id="starsContainer"></div>
+        <video id="gift-image" src="image/happy.mp4" muted loop playsinline preload="metadata"
+            style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; max-width: 80%; max-height: 80%;"></video>
+        <div class="content-display" id="contentDisplay">
+            <p id="contentText"></p>
+        </div>
+        <div class="firework-container" id="fireworkContainer"></div>
+        <div class="book-container">
+            <div class="book" id="book"></div>
+        </div>
+
+        <button class="music-control" id="musicControl" title="Lecture ou pause de la musique" aria-label="Lecture ou pause de la musique">
+            ▶
+        </button>
+
+        <button class="settings-button" id="settingsButton" title="Paramètres" aria-label="Paramètres" style="display: none;">
+            ⚙
+        </button>
+
+        <!-- Settings hint element -->
+        <div id="settingsHint" class="settings-hint">
+            <div class="hint-text" data-i18n="settingsHint" style="display: none;">Cliquez ici pour personnaliser les paramètres</div>
+        </div>
+
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 data-i18n="settings">⚙️ Paramètres du site</h2>
+                    <span class="close">×</span>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-section">
+                        <h3 data-i18n="music">🎵 Paramètres audio</h3>
+                        <div class="form-group">
+                            <label for="backgroundMusic" data-i18n="backgroundMusic">Musique de fond :</label>
+                            <div class="music-select-row">
+                                <select id="backgroundMusic">
+                                    <option value="" disabled selected data-i18n="loadingMusic">Chargement de la liste des musiques…</option>
+                                </select>
+                                <button type="button" id="musicPreviewButton" class="music-preview-btn" data-i18n="previewMusic">▶ Écouter</button>
+                            </div>
+                            <span id="musicPreviewStatus" class="music-preview-status" data-i18n="previewMusicHint">Choisissez une musique, puis cliquez sur « Écouter ».</span>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="countdown">⏰ Paramètres du compte à rebours</h3>
+                        <div class="form-group">
+                            <label for="countdownTime" data-i18n="countdownTime">Durée du compte à rebours :</label>
+                            <select id="countdownTime">
+                                <option value="3" data-i18n="sec3">3 giây</option>
+                                <option value="5" data-i18n="sec5">5 giây</option>
+                                <option value="10" data-i18n="sec10">10 giây</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="matrix">🌧️ Effet de pluie de lettres</h3>
+                        <div class="form-group">
+                            <label for="matrixText" data-i18n="matrixText">Texte de la pluie de lettres :</label>
+                            <input type="text" id="matrixText" value="JE T’AIME"
+                                placeholder="Saisissez le texte de la pluie de lettres" data-i18n-placeholder="matrixText">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="colorTheme">Choisir une couleur :</label>
+                            <div class="color-theme-buttons">
+                                <button type="button" class="color-theme-btn active" data-theme="pink">
+                                    <div class="color-preview pink-preview"></div>
+                                    <span data-i18n="pinkTheme">Rose tendre</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="blue">
+                                    <div class="color-preview blue-preview"></div>
+                                    <span data-i18n="blueTheme">Xanh dương mát mẻ</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="purple">
+                                    <div class="color-preview purple-preview"></div>
+                                    <span data-i18n="purpleTheme">Tím mộng mơ</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="custom">
+                                    <div class="color-preview custom-preview"></div>
+                                    <span data-i18n="customTheme">Tùy chỉnh màu</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-row" id="customColorSection" style="display: none;">
+                            <div class="form-group">
+                                <label for="matrixColor1" data-i18n="matrixColor1">Couleur de la pluie de lettres 1 :</label>
+                                <input type="color" id="matrixColor1" value="#ff69b4">
+                            </div>
+                            <div class="form-group">
+                                <label for="matrixColor2" data-i18n="matrixColor2">Couleur de la pluie de lettres 2 :</label>
+                                <input type="color" id="matrixColor2" value="#ff1493">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="sequence">✨ Texte principal</h3>
+                        <div class="form-group">
+                            <label for="sequenceText" data-i18n="sequenceText">Texte principal :</label>
+                            <span data-i18n="noteSequence"
+                                style="color: rgb(132, 132, 132); font-weight: normal; font-size: 12px; display: block; margin-bottom: 5px;">
+                                Séparez les mots avec le caractère | et évitez les lignes trop longues.
+                            </span>
+                            <input type="text" id="sequenceText" value="JE|T’AIME|AMIRA|❤"
+                                placeholder="Exemple : JE|T’AIME|AMIRA|…" data-i18n-placeholder="sequenceText">
+                        </div>
+                        <div class="form-group" id="sequenceColorSection" style="display: none;">
+                            <label for="sequenceColor" data-i18n="sequenceColor">Couleur du texte principal :</label>
+                            <input type="color" id="sequenceColor" value="#ff69b4">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="gift">🎁 Paramètres de l’animation</h3>
+                        <div class="form-group">
+                            <label for="giftImage" data-i18n="giftImage">Animation (facultative) :</label>
+                            <select id="giftImage">
+                                <option value="" data-i18n="noGif">Aucune</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="enableBook" data-i18n="enableBook">Afficher le livre :</label>
+                        <select id="enableBook">
+                            <option value="true" data-i18n="on">Activé</option>
+                            <option value="false" data-i18n="off">Désactivé</option>
+                        </select>
+                    </div>
+                    <div class="settings-section" id="bookSettingsSection">
+                        <h3 data-i18n="book">📖 Paramètres du livre</h3>
+                        <div id="pageConfigs">
+                        </div>
+                        <div class="form-group">
+                            <label for="enableHeart" data-i18n="enableHeart">Afficher l’effet de cœurs :</label>
+                            <select id="enableHeart">
+                                <option value="true" data-i18n="on">Activé</option>
+                                <option value="false" data-i18n="off">Désactivé</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="isSave" data-i18n="isSave">Conserver le QR code sans expiration :</label>
+                        <input type="checkbox" id="isSave" style="margin-left: 10px;">
+                        <span style="margin-left: 5px; font-size: 12px; color: #666;" data-i18n="saveForeverPrice">(Supplément de 20 000 VND)</span>
+                    </div>
+                    <div class="settings-p"
+                        style="margin-bottom: 12px; background: #fff8e1; color: #b26a00; border-radius: 7px; padding: 10px 14px; font-size: 15px; box-shadow: 0 1px 6px rgba(0,0,0,0.04);">
+                        <div class="settings-p" style="margin-bottom: 4px;">
+                            ⏳ Durée de validité : <b id="expireDate">30 jours</b>
+                        </div>
+                        <div data-i18n="followNote" class="settings-p">
+                            🥰 <a href="https://www.tiktok.com/@iamtritoan?is_from_webapp=1&sender_device=pc"
+                                target="_blank" style="color:#ff0050;font-weight:bold;text-decoration:underline;">Suivez-moi</a> pour découvrir les dernières créations !
+                        </div>
+                        <div class="settings-p" data-i18n="notVietnamWarning">
+                            ⚠️ Besoin d’aide ? Contactez-moi sur TikTok :
+                            <a href="https://www.tiktok.com/@iamtritoan?is_from_webapp=1&sender_device=pc"
+                                target="_blank" style="color:#ff0050;font-weight:bold;text-decoration:underline;">
+                                @iamtritoan</a>.
+                        </div>
+                    </div>
+                    <button id="applySettings" class="apply-settings-btn" data-i18n="apply">🎉 Appliquer les paramètres</button>
+                </div>
+            </div>
+        </div>
+
+        <audio id="backgroundAudio" loop>
+            Votre navigateur ne prend pas en charge la lecture audio.
+        </audio>
+
+        <div id="orientation-lock">
+            <div class="phone-icon">
+                <img src="image/screen.png" alt="">
+            </div>
+        </div>
+        <!-- Modal Payment-->
+        <div id="paymentModal"
+            style="display:none; position:fixed; top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:99999;">
+            <div
+                style="position:relative; margin: 5% auto; width: 90%; max-width: 800px; background:white; padding:20px; border-radius:10px;">
+                <button onclick="document.getElementById('paymentModal').style.display='none'"
+                    style="position:absolute;top:10px;right:10px;">✖</button>
+                <iframe id="paymentIframe" style="width:100%; height:600px; border:none;"></iframe>
+            </div>
+        </div>
+        <!-- Nút Full màn hình, chỉ hiện trên Android -->
+        <button id="fullscreenBtn" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 990010;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #222;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    display: none;
+">
+            <img style="
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+" src="image/full.png" alt="">
+        </button>
+        <script src="detect-devtools.js"></script>
+        <script type='text/javascript'>
+            // Bypass for developers
+            const keyName = 'key';
+            const keyValue = '9ac7ec230e0e4513578f309d6d3579ad';
+
+            // Handle via config
+            DisableDevtool({
+                tkName: keyName,
+                md5: keyValue,
+                interval: '100',
+            });
+        </script>
+        <script src="lang.js"></script>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        <script src="api.obf.js"></script>
+        <script src="auth.obf.js"></script>
+        <script src="voucher.obf.js"></script>
+        <script src="settings.js"></script>
+        <script src="main.js"></script>
+        <script src="ui.js"></script>
+</body>
+
+</html>
